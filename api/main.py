@@ -26,7 +26,7 @@ my_email = os.environ.get("Email")
 password = os.environ.get("Pass")
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("POSTGRES_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("POSTGRES_PRISMA_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
