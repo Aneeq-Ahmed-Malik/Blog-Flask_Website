@@ -18,6 +18,8 @@ import datetime as dt
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("Secret")
 app.jinja_env.globals['Year'] = dt.datetime.now().year
+
+
 ckeditor = CKEditor(app)
 bootstrap = Bootstrap5(app)
 
@@ -26,7 +28,7 @@ my_email = os.environ.get("Email")
 password = os.environ.get("Pass")
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("POSTGRES_URL_NON_POOLING", "sqlite:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("POSTGRES_URL", "sqlite:///blog.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
