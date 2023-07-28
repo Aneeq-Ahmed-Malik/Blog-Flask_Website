@@ -28,7 +28,7 @@ my_email = os.environ.get("Email")
 password = os.environ.get("Pass")
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://default:wEWrL1S3PzFd@ep-proud-base-16789350-pooler.us-east-1.postgres.vercel-storage.com:5432/verceldb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -91,8 +91,8 @@ class BlogPost(db.Model):
     likes = relationship("Like", back_populates="post")
 
 
-# with app.app_context():
-#     db.create_all()
+with app.app_context():
+    db.create_all()
 
 
 def admin_only(function):
