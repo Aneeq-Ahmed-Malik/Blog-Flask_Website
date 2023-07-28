@@ -26,7 +26,7 @@ my_email = os.environ.get("Email")
 password = os.environ.get("Pass")
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("POSTGRES_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -87,6 +87,10 @@ class BlogPost(db.Model):
 
     comments = relationship("Comment", back_populates="post")
     likes = relationship("Like", back_populates="post")
+
+
+with app.app_context():
+    db.create_all()
 
 
 def admin_only(function):
