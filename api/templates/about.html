@@ -1,0 +1,36 @@
+{% include "header.html" %}
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url({{ url_for('static', filename='img/about-bg.jpg')}})">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1>About Me</h1>
+            <span class="subheading">This is what I do.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <b>About Me</b>
+        <p>Hello, I am delighted to have you here as we embark on this journey of exploration through the magic of words. My name is Aneeq Malik, a Python Developer. Learning new things constantly😉</p>
+        <b>About MyVoiceYourVoice</b>
+        <p>Welcome to MyVoiceYourVoice, a dynamic and inclusive blogging platform that celebrates the power of collective expression. At MyVoiceYourVoice, we believe that every voice deserves to be heard, and every story holds the potential to inspire and connect with others.</p>
+        <b>Your Story, Your Stage</b>
+        <p>Whether you are a seasoned wordsmith or a first-time blogger, this is your stage to shine. Share your personal anecdotes, thought-provoking essays, travelogues, poetry, or any other form of expression that moves you. MyVoiceYourVoice is your canvas to paint the world with your words.</p>
+        <b>Join Our Community</b>
+        <p>Whether you're a reader seeking captivating narratives or a writer yearning to make an impact, we invite you to join our vibrant community. Explore the richness of different perspectives, engage in stimulating discussions, and find your voice amidst the collective chorus of MyVoiceYourVoice.<br/> <a href="{{ url_for('register') }}">Join Now!</a></p>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  {% include "footer.html" %}

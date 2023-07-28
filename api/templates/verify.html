@@ -1,0 +1,249 @@
+{% include "header.html" %}
+
+  <style>
+form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+#otp-submit-button, .snd {
+  background-color: green;
+  margin-top: 50px;
+  width: 150px;
+  height: 40px;
+  background-color: green;
+  border: none;
+  color: white;
+  padding: 10px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+#otp-submit-button:disabled {
+  background-color: grey;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input.otc-input {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  font-size: 20px;
+  border: 1px solid green;
+  margin-left: 10px;
+  appearance: textfield;
+	#-webkit-appearance: textfield;
+  font-size: 2em;
+	text-align: center;
+  border-radius: 8px;
+};
+
+input:focus {
+  border: 2px solid green;
+  border-radius: 8px;
+}
+
+
+  </style>
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('https://images.unsplash.com/photo-1470092306007-055b6797ca72?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>Verify</h1>
+            <span class="subheading">Get verified to post blogs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container" style="justify-content: center;">
+    <div class="row">
+      <div class="col-10 col-lg-6 col-md-8 mx-auto text-center">
+          <div class="form-floating mb-3 row">
+            <label class="form-control text-left" for="floatingInput" aria-disabled="true">{{ current_user.name }}</label>
+            <input type="email" class="form-control" id="floatingInput" value="{{ current_user.email }}" readonly>
+          </div>
+          <button class="w-75 center btn btn-outline-primary" id="send-btn" onclick="myFunction3()">Send</button>
+          <hr class="my-4">
+      </div>
+    </div>
+  </div>
+  <div class="container" style="justify-content: center;">
+    <div class="row">
+      <div class="col-6 col-lg-8 col-md-10 mx-auto" style="display: none;" id="otp-div">
+        <form id="otp-form" >
+          <p id='otp-data' style="color:black; font-style:bold;">Enter the OTP</p>
+          <div class="container" style="  display: flex; flext-direction: row; justify-content: center;">
+            <input type="tel" pattern="[0-9]*" inputtype="numeric" autoComplete="one-time-code" class="otc-input" id="otc-1" value=""></input>
+            <input type="tel" pattern="[0-9]*" min="0" max="9" maxlength="1" inputtype="numeric" class="otc-input" value=""></input>
+            <input type="number" pattern="[0-9]*" min="0" max="9" maxlength="1" inputtype="numeric" class="otc-input" value=""></input>
+            <input type="number" pattern="[0-9]*" min="0" max="9" maxlength="1" inputtype="numeric" class="otc-input" value=""></input>
+            <input type="number" pattern="[0-9]*" min="0" max="9" maxlength="1" inputtype="numeric" class="otc-input" value=""></input>
+            <input type="number" pattern="[0-9]*" min="0" max="9" maxlength="1" inputtype="numeric" class="otc-input" value=""></input>
+          </div>
+
+          <button disabled class="hero" type="submit" id="otp-submit-button">Let's go! </button>
+
+        </form>
+          <hr>
+      </div>
+    </div>
+  </div>
+
+
+{% extends "footer.html" %}
+{% block scp %}
+<script>
+
+        function myFunction3() {
+      var x = document.getElementById("otp-div");
+      var y = "hello";
+      if (x.style.display === "none") {
+        x.style.display = "block";
+        y = "123";
+    }
+    {{ y | hello }}
+    }
+
+
+
+const OTPCodeInput = [...document.querySelectorAll('.otc-input')];
+const firstInput = document.getElementById('otc-1');
+const otpForm = document.getElementById('otp-form');
+const otpDataParagraph = document.getElementById('otp-data');
+
+const populateNextInput = (targetEl, inputValue) => {
+	// Apply first item to first input
+	targetEl.value = inputValue[0];
+	// remove the first character
+	const newInputValue = inputValue.substring(1);
+
+	if (targetEl.nextElementSibling && targetEl.nextElementSibling.tagName === 'INPUT') {
+    targetEl.nextElementSibling.select();
+    // Do the same to the next element and next data
+    if (newInputValue.length) {
+		  populateNextInput(targetEl.nextElementSibling, newInputValue);
+    }
+	}
+};
+
+const spreadNumber = (targetEl, inputValue) => {
+	// one more check to secure spreading digits
+	if (!inputValue || (inputValue && inputValue.length === 1)) {
+		return;
+	}
+
+	populateNextInput(targetEl, inputValue);
+};
+
+const toggleSubmitButton = (disabled) => {
+	const optInSubmitButton = document.getElementById("otp-submit-button");
+
+	optInSubmitButton.disabled = disabled;
+};
+
+const validateInputs = () => {
+	const incorrectInput = OTPCodeInput.find(
+		(inputElement) =>
+			!inputElement.value || (inputElement.value && isNaN(inputElement.value))
+	);
+
+	if (incorrectInput) {
+		toggleSubmitButton(true);
+	} else {
+		toggleSubmitButton(false);
+	}
+};
+
+const handleOTPInputChange = (e) => {
+	// remove non-digit inputs
+	let inputValue = e.target.value;
+	inputValue = inputValue.replace(/\D/g, "");
+  console.log(inputValue);
+	// if enter more than one digits at a time, i.e copy pasting or typing really fast, spread the value to sibling inputs, otherwise do nothing
+	if (inputValue.length > 1) {
+		spreadNumber(e.target, inputValue);
+	} else {
+		e.target.value = inputValue;
+    // move the pointer to next input field if use has done typing
+		if (inputValue && e.target.nextElementSibling && e.target.nextElementSibling.tagName === 'INPUT') {
+			e.target.nextElementSibling.select();
+		}
+	}
+
+	validateInputs();
+};
+
+// setup input fields event listeners
+if (OTPCodeInput) {
+	OTPCodeInput.forEach(function (inputField) {
+		// control on keyup to catch user intention such as 'delete', 'move forward', 'move backward'
+		inputField.addEventListener("keyup", function (e) {
+			// On Backspace or left arrow, go to the previous field.
+			if (
+				(e.keyCode === 8 || e.keyCode === 37) &&
+				this.previousElementSibling &&
+				this.previousElementSibling.tagName === "INPUT"
+			) {
+				this.previousElementSibling.focus();
+			}
+      	if (e.keyCode === 39 &&
+				this.nextElementSibling &&
+				this.nextElementSibling.tagName === "INPUT"
+			) {
+				this.nextElementSibling.select();
+			}
+		});
+		/** Better control on Focus
+		 * don't allow focus on other field if the first one is empty
+		 * get the focus on the first empty field
+		 * don't allow focus on field if the previous one if empty (debatable)
+		 **/
+		inputField.addEventListener("focus", function (e) {
+			// If the focus element is the first one, do nothing
+			if (this === firstInput) {
+				return;
+			}
+			// If value of input 1 is empty, focus it.
+			if (firstInput.value === "") {
+				firstInput.focus();
+			}
+			// If value of a previous input is empty, focus it.
+			// To remove if you don't wanna force user respecting the fields order.
+			if (this.previousElementSibling.value === "") {
+				this.previousElementSibling.focus();
+			}
+		});
+
+		inputField.addEventListener("input", handleOTPInputChange);
+	});
+}
+
+const concatNumber = () => {
+	const miniInputs = [...document.querySelectorAll(".mini")];
+	otpInput.value = miniInputs.map((input) => input.value).join("");
+};
+
+if (otpForm) {
+	otpForm.addEventListener("submit", concatNumber);
+}
+
+</script>
+{% endblock %}

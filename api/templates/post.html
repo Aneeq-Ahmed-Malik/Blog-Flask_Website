@@ -1,0 +1,118 @@
+{% from 'bootstrap5/form.html' import render_form %}
+{% include "header.html" %}
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('{{post.img_url}}')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>{{post.title}}</h1>
+            <h2 class="subheading">{{post.subtitle}}</h2>
+            <span class="meta">Posted by
+              <a href="#">{{post.author.name}}</a>
+              on {{post.date}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            {{ post.body|safe }}
+            {% if not current_user.is_anonymous %}
+                <button onclick="myFunction2()" class="btn btn-primary">Add Comment</button>
+                {% if current_user["id"] == post.author.id %}
+                <a class="btn btn-primary float-right" href="{{url_for('edit_post', post_id=post.id)}}">Edit Post</a>
+               {% endif %}
+            {% endif %}
+            <hr>
+            <div id="add-comment" style="display: none">
+            {% if current_user.is_authenticated %}
+                {{ ckeditor.load() }}
+                {{ ckeditor.config(name='comment') }}
+                {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+            {% endif %}
+            </div>
+
+
+
+
+<!--           Comments Area -->
+          <div class="mx-auto comment">
+              <p>
+                {% set ns = namespace(flag=False) %}
+                {% for like in post.likes %}
+                  {% if like.author.id == current_user.id %}
+                     <span id="heart" class="liked"><i class="fa fa-heart fa-xl" aria-hidden="true" ></i></span> {{ post.likes | length }} Likes
+                     {% set ns.flag = True %}
+                  {% endif %}
+                {% endfor %}
+
+                  {% if ns.flag == False %}
+                     {% if current_user.is_anonymous %}
+                        <span><i class="fa fa-heart-o fa-xl" aria-hidden="true" ></i></span> {{ post.likes | length }} Likes
+                     {% else %}
+                        <span id="heart"><i class="fa fa-heart-o fa-xl" aria-hidden="true" ></i></span> {{ post.likes | length }} Likes
+                     {% endif %}
+                  {% endif %}
+
+
+
+                <span id = "comment-icon" class="ml-5" onclick="myFunction()"><i class="fa fa-comment-o fa-xl" aria-hidden="true" ></i></span>
+                 {{ post.comments | length }} Comments
+              </p>
+
+              <ul class="commentList" id="show-comment" style="display:none">
+                  {% for comment in post.comments %}
+                <li>
+                    <div class="commenterImage">
+                      <img src="{{ comment.author.email | gravatar }}"/>
+                    </div>
+                    <div class="commentText">
+                      <p>{{ comment.text | safe }}</p>
+                      <span class="date sub-text">{{ comment.author.name }}
+                          {% if not current_user.is_anonymous %}
+                            {% if current_user.id == post.author.id or current_user.id == comment.author.id %}
+                                <a href="{{ url_for('delete_comment', comment_id=comment.id) }}">✘</a>
+                            {% endif %}
+                          {% endif %}
+                      </span>
+                    </div>
+                </li>
+                  {% endfor %}
+              </ul>
+            </div>
+
+
+          </div>
+      </div>
+    </div>
+  </article>
+  <hr>
+
+{% extends "footer.html" %}
+{% block scp %}
+<script>
+
+  $(document).ready(function(){
+  $("#heart").click(function(){
+    if($("#heart").hasClass("liked")){
+      $("#heart").html('<i class="fa fa-heart-o fa-xl" aria-hidden="true"></i>');
+      $("#heart").removeClass("liked");
+      window.location.href='{{ url_for('delete_like' , post_id=post.id) }}'
+    }else{
+      $("#heart").html('<i class="fa fa-heart fa-xl" aria-hidden="true"></i>');
+      $("#heart").addClass("liked");
+      window.location.href='{{ url_for('like', post_id=post.id) }}'
+    }
+  });
+});
+
+</script>
+{% endblock %}
