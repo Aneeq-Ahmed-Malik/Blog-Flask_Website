@@ -91,8 +91,8 @@ class BlogPost(db.Model):
     likes = relationship("Like", back_populates="post")
 
 
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 
 def admin_only(function):
