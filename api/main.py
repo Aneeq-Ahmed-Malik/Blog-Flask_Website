@@ -28,7 +28,7 @@ my_email = os.environ.get("Email")
 password = os.environ.get("Pass")
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("POSTGRES_MY_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
